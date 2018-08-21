@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Input from './input';
+import Content from './content';
 
 class Card extends Component {
 
@@ -23,21 +24,25 @@ class Card extends Component {
             adjectiveFour: '',
             nounThree: '',
             celebFour: '',
-            adjectiveFive: ''
-
+            adjectiveFive: '',
+            contentVisible: false
         }
-        
+
         this.handleInputChange = this.handleInputChange.bind(this);
-        
-    }
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    } 
 
     handleInputChange(event) {
-      
-        this.setState({ [event.target.name]: event.target.value })    
-        console.log(this.state);
+        this.setState({ [event.target.name]: event.target.value })
+    }
+
+    handleFormSubmit(event) {
+        event.preventDefault()
+        this.setState({ contentVisible: !this.state.contentVisible })
     }
 
     render() {
+
         const inputData = [
             {title: 'Color', state: this.state.color, name: 'color'},
             {title: 'Plural Noun', state: this.state.pluralNoun, name: 'pluralNoun'},
@@ -57,17 +62,21 @@ class Card extends Component {
             {title: 'Adjective', state: this.state.adjectiveFour, name: 'adjectiveFour'},
             {title: 'Noun', state: this.state.nounThree, name: 'nounThree'},
             {title: 'Celebrity', state: this.state.celebFour, name: 'celebFour'},
-            {title: 'Adjective', state: this.state.adjectiveFive, name: 'adjectiveFive'}
-        ]  
-        
+            {title: 'Adjective', state: this.state.adjectiveFive, name: 'adjectiveFive'},
+        ]
+
         return (
-            <div className="card">
-                 {
-                     inputData.map(data => Input((data), this.handleInputChange))
+            <form onSubmit={this.handleFormSubmit} className="card">
+                <div className="card__inputs">
+                {
+                    inputData.map(data => Input( (data), this.handleInputChange ))
                 }
-                              
-               
-            </div>
+                </div>
+                <button type="submit">{!this.state.contentVisible ? 'Generate Mad Lib' : 'Clear Form'}</button>
+                {
+                    this.state.contentVisible ? <Content data={this.state}/> : ''
+                }
+            </form>
         )
     }
 }
